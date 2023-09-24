@@ -1,0 +1,2 @@
+# Infinite Mandelbrot
+A project for school, revisited the Mandelbrot set. Hoping to make the zoom truly infinite without arbitrary precision using a paper by [K.I. Martin](http://www.science.eclipse.co.uk/sft_maths.pdf)
