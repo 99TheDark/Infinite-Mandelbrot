@@ -9,7 +9,7 @@ uniform vec2 offset;
 in vec2 pos;
 out vec4 color;
 
-#define MAX_ITERATIONS 300
+#define MAX_ITERATIONS 1000
 #define TAU 6.28318530717958647692
 
 #define background vec3(0.0)
@@ -45,20 +45,44 @@ vec3 HSVtoRGB(vec3 col) {
     return val + m;
 }
 
-void main() {
-    vec2 coord = pos * normalize(size) / zoom + offset;
+vec2 cMul(vec2 a, vec2 b) {
+    return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+}
 
+float mandelbrot(vec2 coord) {
     vec2 z = vec2(0.0);
     for(int i = 0; i < MAX_ITERATIONS; i++) {
-        // (a+bi)^2 = a^2+2abi+bi^2 = a^2-b^2+2abi
         z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + coord;
 
         if(length(z) > 2.0) {
-            float luminosity = float(i) / float(MAX_ITERATIONS);
-            color = vec4(palette(luminosity, background, col1, col2, col3), 1.0);
-            return;
+            return float(i) / float(MAX_ITERATIONS);
         }
     }
+    return -1.0;
+}
 
-    color = vec4(0.0, 0.0, 0.0, 1.0);
+float mandelbrot_perturbation(vec2 center, vec2 uv) {
+    float k = mandelbrot(center);
+    if(k != -1.0) {
+        return mandelbrot(center + uv);
+    } else {
+        vec2 z = vec2(0.0);
+        vec2 dz = vec2(0.0);
+        for(int i = 0; i < MAX_ITERATIONS; i++) {
+            dz = cMul(2.0 * z + dz, dz) + uv;
+            z = cMul(z, z) + center; // can be precomputed
+            
+            if(length(dz) > 2.0) {
+                return float(i) / float(MAX_ITERATIONS); 
+            }
+        }
+        return 0.0;
+    }
+}
+
+void main() {
+    vec2 coord = pos * normalize(size) * zoom;
+
+    float lum = mandelbrot_perturbation(offset / size, coord);
+    color = vec4(palette(lum, background, col1, col2, col3), 1.0);
 }

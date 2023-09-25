@@ -66,18 +66,18 @@ function main(vertexSource, fragmentSource) {
     gl.viewport(0, 0, width, height);
 
     const cam = {
-        zoom: 0.5 * 2,
-        x: 0.3201,
-        y: 0.5104
+        zoom: 3,
+        x: 0,
+        y: 0
     };
     let mouseDown = false;
 
     function draw() {
-        const sizeUniformLocation = gl.getUniformLocation(program, "size");
-        gl.uniform2f(sizeUniformLocation, width, height);
-
         const zoomUniformLocation = gl.getUniformLocation(program, "zoom");
         gl.uniform1f(zoomUniformLocation, cam.zoom);
+
+        const sizeUniformLocation = gl.getUniformLocation(program, "size");
+        gl.uniform2f(sizeUniformLocation, width, height);
 
         const offsetUniformLocation = gl.getUniformLocation(program, "offset");
         gl.uniform2f(offsetUniformLocation, cam.x, cam.y);
@@ -98,19 +98,19 @@ function main(vertexSource, fragmentSource) {
         const preY = mouseY / cam.zoom;
 
         cam.zoom *= 1 + e.deltaY / 1000;
-        cam.zoom = Math.min(Math.max(cam.zoom, 0.01), 20000);
+        // cam.zoom = Math.min(Math.max(cam.zoom, 0.01), 20000);
 
         const postX = mouseX / cam.zoom;
         const postY = mouseY / cam.zoom;
 
-        cam.x += map(preX - postX, 0, width, 0, 1);
-        cam.y -= map(preY - postY, 0, height, 0, 1);
+        // cam.x += map(preX - postX, 0, width, 0, 1);
+        // cam.y -= map(preY - postY, 0, height, 0, 1);
     });
 
     document.addEventListener("mousemove", e => {
         if(mouseDown) {
-            cam.x -= e.movementX / width / cam.zoom;
-            cam.y += e.movementY / height / cam.zoom;
+            cam.x -= e.movementX * cam.zoom;
+            cam.y += e.movementY * cam.zoom;
         }
     });
 
