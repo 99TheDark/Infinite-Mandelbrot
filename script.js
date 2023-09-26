@@ -70,6 +70,10 @@ function main(vertexSource, fragmentSource) {
         x: 0,
         y: 0
     };
+    const orbit = {
+        x: 0,
+        y: 0
+    };
     let mouseDown = false;
 
     function draw() {
@@ -81,6 +85,25 @@ function main(vertexSource, fragmentSource) {
 
         const offsetUniformLocation = gl.getUniformLocation(program, "offset");
         gl.uniform2f(offsetUniformLocation, cam.x, cam.y);
+
+        let z = { im: 0, re: 0 };
+        let pass = true;
+        for(let i = 0; i < 1000; i++) {
+            let zOld = { ...z };
+            z.re = zOld.re * zOld.re - zOld.im * zOld.im + cam.x / width;
+            z.im = 2 * zOld.re * zOld.im + cam.y / height;
+            if(Math.hypot(z.re, z.im) > 2) {
+                pass = false;
+                break;
+            }
+        }
+        if(pass) {
+            orbit.x = cam.x;
+            orbit.y = cam.y;
+        }
+
+        const orbitUniformLocation = gl.getUniformLocation(program, "orbit");
+        gl.uniform2f(orbitUniformLocation, orbit.x, orbit.y);
 
         gl.clearColor(1.0, 1.0, 1.0, 1.0);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -103,8 +126,8 @@ function main(vertexSource, fragmentSource) {
         const postX = mouseX / cam.zoom;
         const postY = mouseY / cam.zoom;
 
-        // cam.x += map(preX - postX, 0, width, 0, 1);
-        // cam.y -= map(preY - postY, 0, height, 0, 1);
+        // cam.x -= map(preX - postX, 0, width, 0, 1);
+        // cam.y += map(preY - postY, 0, height, 0, 1);
     });
 
     document.addEventListener("mousemove", e => {
