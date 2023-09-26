@@ -13,6 +13,8 @@ out vec4 color;
 #define MAX_ITERATIONS 1000
 #define TAU 6.28318530717958647692
 
+#define ADVANCED false
+
 #define background vec3(0.0)
 #define col1 vec3(0.549, 0.502, 0.729)
 #define col2 vec3(0.129, 0.182, 0.361) 
@@ -53,8 +55,11 @@ float mandelbrot_perturbation(vec2 orbit, vec2 uv) {
 }
 
 void main() {
-    vec2 coord = pos * normalize(size) * zoom;
+    vec2 coord = pos * normalize(size) / zoom;
 
-    float lum = mandelbrot_perturbation(orbit / size, coord + (offset - orbit) / size); // offset / size
+    float lum = ADVANCED ? 
+                mandelbrot(offset + coord) : 
+                mandelbrot_perturbation(orbit, coord + offset - orbit);
+    
     color = vec4(palette(lum, background, col1, col2, col3), 1.0);
 }

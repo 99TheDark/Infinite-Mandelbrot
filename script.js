@@ -66,7 +66,7 @@ function main(vertexSource, fragmentSource) {
     gl.viewport(0, 0, width, height);
 
     const cam = {
-        zoom: 3,
+        zoom: 0.3,
         x: 0,
         y: 0
     };
@@ -90,8 +90,8 @@ function main(vertexSource, fragmentSource) {
         let pass = true;
         for(let i = 0; i < 1000; i++) {
             let zOld = { ...z };
-            z.re = zOld.re * zOld.re - zOld.im * zOld.im + cam.x / width;
-            z.im = 2 * zOld.re * zOld.im + cam.y / height;
+            z.re = zOld.re * zOld.re - zOld.im * zOld.im + cam.x;
+            z.im = 2 * zOld.re * zOld.im + cam.y;
             if(Math.hypot(z.re, z.im) > 2) {
                 pass = false;
                 break;
@@ -126,14 +126,14 @@ function main(vertexSource, fragmentSource) {
         const postX = mouseX / cam.zoom;
         const postY = mouseY / cam.zoom;
 
-        // cam.x -= map(preX - postX, 0, width, 0, 1);
-        // cam.y += map(preY - postY, 0, height, 0, 1);
+        cam.x += map(preX - postX, 0, width, 0, 1);
+        cam.y -= map(preY - postY, 0, height, 0, 1);
     });
 
     document.addEventListener("mousemove", e => {
         if(mouseDown) {
-            cam.x -= e.movementX * cam.zoom;
-            cam.y += e.movementY * cam.zoom;
+            cam.x -= e.movementX / width / cam.zoom;
+            cam.y += e.movementY / height / cam.zoom;
         }
     });
 
