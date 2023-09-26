@@ -121,7 +121,7 @@ function main(vertexSource, fragmentSource) {
         const preY = mouseY / cam.zoom;
 
         cam.zoom *= 1 + e.deltaY / 1000;
-        // cam.zoom = Math.min(Math.max(cam.zoom, 0.01), 20000);
+        cam.zoom = Math.min(Math.max(cam.zoom, 0.03), 380000);
 
         const postX = mouseX / cam.zoom;
         const postY = mouseY / cam.zoom;
@@ -134,7 +134,6 @@ function main(vertexSource, fragmentSource) {
         if(mouseDown) {
             cam.x -= e.movementX / width / cam.zoom;
             cam.y += e.movementY / height / cam.zoom;
-            console.log(cam);
         }
     });
 

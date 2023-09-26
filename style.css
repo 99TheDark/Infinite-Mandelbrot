@@ -17,3 +17,29 @@ body {
 #canvas:active {
     cursor: grab;
 }
+
+#tag {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    padding: 18px 40px;
+}
+
+#github {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+}
+
+#github > img {
+    width: 52px;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
+#github > p {
+    font-family: "Roboto Mono", sans-serif;
+    margin-left: 25px;
+    color: white;
+}
