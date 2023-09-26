@@ -33,25 +33,25 @@ float mandelbrot(vec2 coord) {
     for(int i = 0; i < MAX_ITERATIONS; i++) {
         z = vec2(z.x * z.x - z.y * z.y, 2.0 * z.x * z.y) + coord;
 
-        if(length(z) > 2.0) {
+        if(dot(z, z) > 4.0) {
             return float(i) / float(MAX_ITERATIONS);
         }
     }
-    return -1.0;
+    return 0.0;
 }
 
 float mandelbrot_perturbation(vec2 orbit, vec2 uv) {
-    vec2 dz = vec2(0.0);
+    vec2 delta = vec2(0.0);
     vec2 z = vec2(0.0);
     for(int i = 0; i < MAX_ITERATIONS; i++) {
-        dz = cMul(2.0 * z + dz, dz) + uv;
+        delta = cMul(2.0 * z + delta, delta) + uv;
         z = cMul(z, z) + orbit; 
         
-        if(length(dz) > 2.0) {
+        if(dot(delta, delta) > 4.0) {
             return float(i) / float(MAX_ITERATIONS); 
         }
     }
-    return -1.0;
+    return 0.0;
 }
 
 void main() {

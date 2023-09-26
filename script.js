@@ -66,7 +66,7 @@ function main(vertexSource, fragmentSource) {
     gl.viewport(0, 0, width, height);
 
     const cam = {
-        zoom: 0.3,
+        zoom: 0.4,
         x: 0,
         y: 0
     };
@@ -88,7 +88,7 @@ function main(vertexSource, fragmentSource) {
 
         let z = { im: 0, re: 0 };
         let pass = true;
-        for(let i = 0; i < 1000; i++) {
+        for(let i = 0; i < 10000; i++) {
             let zOld = { ...z };
             z.re = zOld.re * zOld.re - zOld.im * zOld.im + cam.x;
             z.im = 2 * zOld.re * zOld.im + cam.y;
@@ -134,6 +134,7 @@ function main(vertexSource, fragmentSource) {
         if(mouseDown) {
             cam.x -= e.movementX / width / cam.zoom;
             cam.y += e.movementY / height / cam.zoom;
+            console.log(cam);
         }
     });
 
